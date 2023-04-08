@@ -1,7 +1,8 @@
-#include "init.h"
+#include "../include/init.h"
 
-void initArduino(){
-
+void initESP8266(){
+    //Configure WIFI connectivity of the board
+    setupWifi();
 }
 
 
@@ -14,13 +15,10 @@ void initSensors(){
 
     //setup lights, buttons and actuators
     setupButton();
-    setupLED();
-
-    //Configure WIFI
-    setupWifi();
+    setupLED(7);
 }
 
 void init(){
-    initArduino();
+    initESP8266();
     initSensors();
 }
