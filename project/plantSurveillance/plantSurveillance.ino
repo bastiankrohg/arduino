@@ -8,6 +8,7 @@
 *       surveillance of your pet plants' health
 */
 #include "include/led.h"
+#include "include/sensor.h"
 
 void setup() {
   // put your setup code here, to run once:
