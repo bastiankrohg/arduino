@@ -1,7 +1,7 @@
 #ifndef _BUTTON_H
 #define _BUTTON_H
 
-#include "actuator.h"
+#include "Actuator.h"
 
 class Button : public Actuator{
 public:
