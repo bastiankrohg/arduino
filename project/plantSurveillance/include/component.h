@@ -2,6 +2,7 @@
 #define _COMPONENT_H
 
 #include <string>
+#include <iostream>
 using namespace std;
 
 class component {
@@ -10,6 +11,13 @@ public:
     component(){
     }
     component(string name){
+        this->name = name;
+    }
+    component(uint8_t rpin){
+        this->rpin = rpin;
+    }
+    component(string name, uint8_t rpin){
+        this->rpin = rpin;
         this->name = name;
     }
     component(string name, uint8_t rpin, uint8_t wpin){
@@ -21,6 +29,15 @@ public:
     //constructor w only rpin for sensor
 
     //methods
+    void init();
+
+    /*
+    void startSerial(){
+        cout << "Starting serial monitor..." << endl;
+        //Serial.begin();
+    }
+    */
+
     uint8_t getReadPin(){
         return this->rpin;
     }

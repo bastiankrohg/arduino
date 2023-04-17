@@ -5,19 +5,27 @@
 
 class button : public actuator{
 public:
-    int button_digitalRead(){
-        return digitalRead(this->rpin);
+    //constructors
+    button(string name, uint8_t rpin, uint8_t wpin) : actuator{name, rpin, wpin} {
+    }
+    button(uint8_t rpin) : actuator{rpin} {
     }
 
+    //methods
+    int readButton(){
+        return digitalRead(this->rpin);
+    }
+    bool isButtonPushed(){
+        return (digitalRead(this->rpin)==HIGH);
+    }
+
+    /*
+    void updateLastValue(){
+        this->lastValue = readButton();
+    }
 private: 
-    uint8_t rpin = D6; //read pin
-
+    int lastValue;
+    */ 
 };
-
-
-
-void setupButton();
-
-void buttonPushed();
 
 #endif

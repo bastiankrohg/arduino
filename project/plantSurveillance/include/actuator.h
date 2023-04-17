@@ -12,6 +12,10 @@ public:
     //constructor
     actuator() : component{} {
     }
+    actuator(uint8_t rpin) : component {rpin} {
+    }
+    actuator(string name, uint8_t rpin) : component {name, rpin} {
+    }
     actuator(string name, uint8_t rpin, uint8_t wpin) : component {name, rpin, wpin} {
     }
 
