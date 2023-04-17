@@ -8,13 +8,23 @@ using namespace std;
 class actuator{
 public: 
     //constructor
-    actuator();
-    actuator(string name, int pin);
+    actuator(){
+        this->pin = -1;
+        this->name = "";
+    }
+    actuator(string name, int pin){
+        this->pin = pin;
+        this->name = name;
+    }
 
     //methods
     void init();
-    int getPin();
-    string getName();
+    int getPin(){
+        return this->pin; 
+    }
+    string getName(){
+        return this->name;
+    }
 
 private: 
     //attributes
