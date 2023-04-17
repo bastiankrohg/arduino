@@ -7,8 +7,16 @@
 *   => Can be used to automate plant care and do
 *       surveillance of your pet plants' health
 */
-#include "include/led.h"
+
+//sensors
 #include "include/sensor.h"
+#include "include/sunlight.h"
+//actuators
+#include "include/actuator.h"
+#include "include/button.h"
+#include "include/display.h"
+#include "include/led.h"
+
 
 void setup() {
   // put your setup code here, to run once:

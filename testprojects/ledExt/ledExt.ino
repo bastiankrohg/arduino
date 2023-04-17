@@ -1,4 +1,5 @@
-int pin = D7;
+int pin = 7;
+//int pin = D7;
 
 void setup() {
   pinMode(pin, OUTPUT);

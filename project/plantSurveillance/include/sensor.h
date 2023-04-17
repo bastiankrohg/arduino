@@ -21,7 +21,4 @@ private:
     int pin;
 };
 
-
-
-
 #endif
