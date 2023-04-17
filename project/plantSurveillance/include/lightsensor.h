@@ -1,42 +1,45 @@
 #ifndef _LIGHTSENSOR_H
 #define _LIGHTSENSOR_H
 
-#include "sensor.h"
-#include "component.h"
+#include "Sensor.h"
+#include "Component.h"
 
 #include <iostream>
 using namespace std;
 
-class lightSensor : public sensor {
+class LightSensor : public Sensor {
 public: 
     //constructor
-    lightSensor() : sensor{} {
+    LightSensor() : Sensor{} {
     }
     //rpin has to be analog as the light sensor has an analog output
-    lightSensor(uint8_t rpin) : sensor {rpin} {
+    LightSensor(uint8_t rpin) : Sensor {rpin} {
     }
-    lightSensor(string name, uint8_t rpin) : sensor {name, rpin} {
+    LightSensor(string name, uint8_t rpin) : Sensor {name, rpin} {
     }
 
     //methods
     void init() const {
         cout << "Init light sensor..." << endl; 
-        //component::startSerial();
+        //Component::startSerial();
     }
 
     int readAnalogLightSensor(){ //analog read
-        return analogRead(this->rpin);
+        return 1;
+        //return analogRead(this->rpin);
     }
     //analog read converted to 0-100
+    /*
     int readLightSensor(){ 
         int value = readAnalogLightSensor();
         value = map(value, 0, 800, 0, 100); 
         //Serial.println(value);
         return value;
     }
+    */
 
     void updateMeasurement(){
-        this->lastMeasurement = readLightSensor();
+        this->lastMeasurement = readAnalogLightSensor();
     }
 
 private: 

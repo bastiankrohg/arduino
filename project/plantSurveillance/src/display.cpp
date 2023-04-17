@@ -1,2 +1,2 @@
-#include "../include/display.h"
+#include "../include/Display.h"
 

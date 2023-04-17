@@ -1,8 +1,8 @@
-#include "../include/actuator.h"
+#include "../include/Actuator.h"
 
 using namespace std;
 
-void actuator::init(){
+void Actuator::init(){
     cout << "init" << endl; 
 }
 

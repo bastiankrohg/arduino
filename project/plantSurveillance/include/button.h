@@ -3,12 +3,12 @@
 
 #include "actuator.h"
 
-class button : public actuator{
+class Button : public Actuator{
 public:
     //constructors
-    button(string name, uint8_t rpin, uint8_t wpin) : actuator{name, rpin, wpin} {
+    Button(string name, uint8_t rpin, uint8_t wpin) : Actuator{name, rpin, wpin} {
     }
-    button(uint8_t rpin) : actuator{rpin} {
+    Button(uint8_t rpin) : Actuator{rpin} {
     }
 
     //methods

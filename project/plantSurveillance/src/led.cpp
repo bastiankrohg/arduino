@@ -1,9 +1,15 @@
 
-#include "../include/led.h"
+#include "../include/Led.h"
 
-void blinkInternalLED(){
+void Led::blinkInternalLED(){
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
     delay(1000);                       // wait for a second
     digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
     delay(1000);      
+}
+void blinkInternalLEDWOClass(){
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+    delay(1000);                       // wait for a second
+    digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+    delay(1000);    
 }

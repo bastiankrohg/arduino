@@ -6,13 +6,14 @@ using namespace std;
 
 #include "component.h"
 
-class sensor : public component {
+class Sensor : public Component {
 public: 
-    sensor() : component {} {
+    //constructor
+    Sensor() : Component {} {
     }
-    //constructor with only rpin
-    sensor(string name, uint8_t rpin) : component{ name } {
-        this->rpin = rpin;
+    Sensor(uint8_t rpin) : Component {rpin} {
+    }
+    Sensor(string name, uint8_t rpin) : Component{ name, rpin } {
     } 
 
     void init();

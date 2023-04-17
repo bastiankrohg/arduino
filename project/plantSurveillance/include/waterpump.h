@@ -1,9 +1,9 @@
 #ifndef _WATERPUMP_H
 #define _WATERPUMP_H
 
-#include "actuator.h"
+#include "Actuator.h"
 
-class waterpump : public actuator {
+class WaterPump : public Actuator {
 public: 
 
 

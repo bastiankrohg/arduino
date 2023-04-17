@@ -5,18 +5,18 @@
 #include <iostream>
 using namespace std; 
 
-#include "component.h"
+#include "Component.h"
 
-class actuator : public component {
+class Actuator : public Component {
 public: 
     //constructor
-    actuator() : component{} {
+    Actuator() : Component{} {
     }
-    actuator(uint8_t rpin) : component {rpin} {
+    Actuator(uint8_t rpin) : Component {rpin} {
     }
-    actuator(string name, uint8_t rpin) : component {name, rpin} {
+    Actuator(string name, uint8_t rpin) : Component {name, rpin} {
     }
-    actuator(string name, uint8_t rpin, uint8_t wpin) : component {name, rpin, wpin} {
+    Actuator(string name, uint8_t rpin, uint8_t wpin) : Component {name, rpin, wpin} {
     }
 
     //methods

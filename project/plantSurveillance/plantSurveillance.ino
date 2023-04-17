@@ -9,13 +9,15 @@
 */
 
 //sensors
-#include "include/sensor.h"
-#include "include/sunlight.h"
+#include "include/Sensor.h"
+#include "include/LightSensor.h"
+
 //actuators
-#include "include/actuator.h"
-#include "include/button.h"
-#include "include/display.h"
-#include "include/led.h"
+#include "include/Actuator.h"
+#include "include/Button.h"
+#include "include/Display.h"
+#include "include/Led.h"
+#include "include/WaterPump.h"
 
 
 void setup() {
@@ -25,5 +27,8 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  blinkInternalLED();
+  
+  blinkInternalLEDWOClass();
+  /*Led led;
+  led.blinkInternalLED();*/
 }

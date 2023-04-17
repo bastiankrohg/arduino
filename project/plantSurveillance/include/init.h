@@ -3,13 +3,13 @@
 
 #include <Arduino.h>
 
-#include "led.h"
-#include "soil.h"
-#include "temp.h"
-#include "humidity.h"
+#include "Led.h"
+#include "Soil.h"
+#include "Temp.h"
+#include "Humidity.h"
 #include "wifi.h"
-#include "button.h"
-#include "sunlight.h"
+#include "Button.h"
+#include "LightSensor.h"
 
 
 void initArduino();

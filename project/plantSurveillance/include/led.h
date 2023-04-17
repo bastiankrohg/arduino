@@ -2,16 +2,31 @@
 #define _LED_H
 
 #include <Arduino.h>
+#include "Actuator.h"
 
-void blinkInternalLED();
+class Led : public Actuator {
+public:
+    //constructors
+    
 
-/******Work in progress*******/
-void setupLED(int pin);
+    //methods
+    void blinkInternalLED();
 
-void startLED();
-void stopLED();
+    /******Work in progress*******/
+    void setupLED(int pin);
 
-void setColor(); //arg?
-/****************************/
+    void startLED();
+    void stopLED();
+
+    void setColor(); //arg?
+    /****************************/
+private: 
+
+};
+
+void blinkInternalLEDWOClass();
+
+
+
 
 #endif

@@ -5,22 +5,22 @@
 #include <iostream>
 using namespace std;
 
-class component {
+class Component {
 public: 
     //constructors
-    component(){
+    Component(){
     }
-    component(string name){
+    Component(string name){
         this->name = name;
     }
-    component(uint8_t rpin){
+    Component(uint8_t rpin){
         this->rpin = rpin;
     }
-    component(string name, uint8_t rpin){
+    Component(string name, uint8_t rpin){
         this->rpin = rpin;
         this->name = name;
     }
-    component(string name, uint8_t rpin, uint8_t wpin){
+    Component(string name, uint8_t rpin, uint8_t wpin){
         this->rpin = rpin;
         this->wpin = wpin;
         this->name = name;

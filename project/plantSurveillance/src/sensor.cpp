@@ -1,8 +1,8 @@
-#include "../include/sensor.h"
+#include "../include/Sensor.h"
 #include <iostream>
 using namespace std;
 
-void sensor::init(){
+void Sensor::init(){
     cout << "init" << endl; 
 }
 

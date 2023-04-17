@@ -1,16 +1,26 @@
 #ifndef _DISPLAY_H
 #define _DISPLAY_H
 
-#include "actuator.h"
+#include "Actuator.h"
+#include <string>
 
-class display : public actuator {
+class Display : public Actuator {
 public: 
-    display();
-    display(string name, int pin);
-    
-    void displayData();
+    //constructors
+    Display() : Actuator {} {
+    }
+    Display(uint8_t rpin) : Actuator {rpin} {
+    }
+    Display(string name, uint8_t rpin) : Actuator {name, rpin} {
+    }
+
+    //methods
+    void init() const;
+    void display();
+    void updateData();
 
 private: 
+    string data[];
 
 
 };
