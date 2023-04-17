@@ -8,6 +8,12 @@ void setupLightSensor();
 int readLightSensor();
 
 class lightSensor : public sensor {
+public: 
+    void updateMeasurement();
+
+private: 
+    int lastMeasurement;
+
 
 };
 

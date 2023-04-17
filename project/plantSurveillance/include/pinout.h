@@ -3,6 +3,7 @@
 #ifndef _PINOUT_H
 #define _PINOUT_H
 
+/*
 #define A0 0
 #define I2C1 1
 #define I2C2 2
@@ -12,6 +13,7 @@
 #define D7 7
 #define D8 8
 #define UART0 9
+*/
 
 
 

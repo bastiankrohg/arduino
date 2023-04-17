@@ -4,21 +4,20 @@
 #include <string>
 using namespace std; 
 
-class sensor{
+#include "component.h"
+
+class sensor : public component {
 public: 
-    //constructor
-    sensor();
-    sensor(string name, int pin);
+    sensor() : component {} {
+    }
+    //constructor with only rpin
+    sensor(string name, uint8_t rpin) : component{ name } {
+        this->rpin = rpin;
+    } 
 
-    //methods
     void init();
-    int getPin();
-    string getName(); 
-
-private:
-    //attributes
-    string name;
-    int pin;
+//private:
+//protected:
 };
 
 #endif

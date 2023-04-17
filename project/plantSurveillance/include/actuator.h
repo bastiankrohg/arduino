@@ -5,31 +5,31 @@
 #include <iostream>
 using namespace std; 
 
-class actuator{
+#include "component.h"
+
+class actuator : public component {
 public: 
     //constructor
-    actuator(){
-        this->pin = -1;
-        this->name = "";
+    actuator() : component{} {
     }
-    actuator(string name, int pin){
-        this->pin = pin;
-        this->name = name;
+    actuator(string name, uint8_t rpin, uint8_t wpin) : component {name, rpin, wpin} {
     }
 
     //methods
     void init();
-    int getPin(){
-        return this->pin; 
+    /*
+    int getReadPin(){
+        return this->rpin; 
+    }
+    int getWritePin(){
+        return this->wpin; 
     }
     string getName(){
         return this->name;
     }
-
-private: 
-    //attributes
-    string name; 
-    int pin; 
+    */
+//private: 
+//protected:
 };
 
 #endif
