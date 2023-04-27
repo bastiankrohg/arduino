@@ -1,3 +1,5 @@
+#include <rgb_lcd.h>
+
 /*
 * C++ project 
 * 4th Year AE-SE - Group 1
@@ -19,16 +21,33 @@
 #include "include/Led.h"
 #include "include/WaterPump.h"
 
+//third party libraries
+//#include <Wire.h>
+#include "include/rgb_lcd.h"
+
+//declarations
+rgb_lcd lcd;
+Led led;
 
 void setup() {
   // put your setup code here, to run once:
     pinMode(LED_BUILTIN, OUTPUT);
+    lcd.begin(16,2);
+    lcd.print("hello, world!");
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   
   blinkInternalLEDWOClass();
-  /*Led led;
-  led.blinkInternalLED();*/
+  
+  //led.blinkInternalLED();
+
+  lcd.noDisplay();
+  delay(500);
+  lcd.display();
+  delay(500);
+
+  lcd.setCursor(0,0);
+
 }
