@@ -21,6 +21,7 @@ public:
 
     //methods
     void init();
+
     /*
     int getReadPin(){
         return this->rpin; 

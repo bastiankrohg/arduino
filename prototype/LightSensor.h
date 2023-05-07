@@ -25,8 +25,8 @@ public:
     }
 
     int readAnalogLightSensor(){ //analog read
-        return 1;
-        //return analogRead(this->rpin);
+        return analogRead(this->rpin);
+        //return analogRead(A0);
     }
     //analog read converted to 0-100
     /*

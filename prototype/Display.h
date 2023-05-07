@@ -10,7 +10,8 @@ class Display : public Actuator{
     Display() : Actuator{}{
     }
 
-    Display(uint8_t rpin) : Actuator {rpin} {
+    Display(uint8_t wpin) : Actuator {} {
+      this->wpin = wpin;
     }
 
     Display(string name, uint8_t rpin) : Actuator{name,rpin}{
@@ -21,7 +22,6 @@ class Display : public Actuator{
     }
 
     ~Display() {} 
-
 
     void startScreen(int rows, int col);
     void displayData(String data);

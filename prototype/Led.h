@@ -1,3 +1,4 @@
+#include <sys/_stdint.h>
 #ifndef _LED_H
 #define _LED_H
 
@@ -7,24 +8,25 @@
 class Led : public Actuator {
 public:
     //constructors
-    
+    Led() : Actuator{} {
+    }
+    Led(uint8_t wpin) : Actuator{} {
+      this->wpin = wpin;
+    }
 
     //methods
     void blinkInternalLED();
 
+    void off();
+    void on();
+
     /******Work in progress*******/
-    void setupLED(int pin);
-
-    void startLED();
-    void stopLED();
-
     void setColor(); //arg?
     /****************************/
 private: 
 
 };
 
-void blinkInternalLEDWOClass();
 
 
 

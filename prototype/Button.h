@@ -9,23 +9,26 @@ public:
     Button(string name, uint8_t rpin, uint8_t wpin) : Actuator{name, rpin, wpin} {
     }
     Button(uint8_t rpin) : Actuator{rpin} {
+      pinMode(rpin,INPUT);
     }
 
     //methods
     int readButton(){
         return digitalRead(this->rpin);
     }
-    bool isButtonPushed(){
+    bool boolIsButtonPressed(){
         return (digitalRead(this->rpin)==HIGH);
     }
-
-    /*
-    void updateLastValue(){
-        this->lastValue = readButton();
+    //is button pressed
+  int isButtonPressed(){
+    int state = 0;
+    if(digitalRead(this->getReadPin())){
+      while(digitalRead(this->getReadPin()));
+      state = 1;
     }
-private: 
-    int lastValue;
-    */ 
+    return state;
+  }
+
 };
 
 #endif

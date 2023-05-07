@@ -12,7 +12,7 @@ void loop() {
   // put your main code here, to run repeatedly:
   int value = analogRead(A0);
   //0 < Analog Value < 800, mapping it to be between 0 and 10
-  value = map(value, 0, 800, 0, 10);
+  value = map(value, 0, 800, 0, 100);
   Serial.println(value);
   delay(1000);
 }

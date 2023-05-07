@@ -17,6 +17,13 @@ public:
     } 
 
     void init();
+
+    int readAnalogSensorValue(){
+      return analogRead(this->rpin);
+    }
+    int readDigitalSensorValue(){
+      return digitalRead(this->rpin);
+    }
 //private:
 //protected:
 };

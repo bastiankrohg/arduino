@@ -3,6 +3,15 @@
 
 class Soil : public Sensor {
 public: 
+  //constructors:
+  Soil() : Sensor{} {
+  }
+  Soil(uint8_t rpin) : Sensor{rpin} {
+  }
+
+  int readSoilMoistureSensor(){
+    return analogRead(this->rpin);
+  }
 
 private: 
 
