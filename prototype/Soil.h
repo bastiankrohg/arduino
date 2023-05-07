@@ -9,16 +9,21 @@ public:
   Soil(uint8_t rpin) : Sensor{rpin} {
   }
 
+  /*
   int readSoilMoistureSensor(){
     return analogRead(this->rpin);
+  }
+  */
+  int readSoilSensorValue(){
+    return this->readAnalogSensorValue();  
   }
 
 private: 
 
 };
 
-void setupSoilMoistureSensor();
+//void setupSoilMoistureSensor();
 
-int readSoil();
+//int readSoil();
 
 #endif

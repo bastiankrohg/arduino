@@ -25,6 +25,9 @@ const int pinButtonPump = D8;
 const int pinLED = D9;
 //const int pinSoil = ?; //pb - need more analog pins or to multiplex A0!
 
+#define soilThreshold 300
+#define lightThreshold 300
+
 rgb_lcd lcd; 
 
 bool isOverheadLightOn = false;
@@ -35,7 +38,7 @@ Button buttonPump(pinButtonPump);
 Led led(pinLED);
 LightSensor lightSensor(pinLight);
 //Soil soilMoisture(pinSoil);
-Soil soilMoisture();
+Soil soilMoisture;
 
 void blink(){
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
@@ -102,15 +105,28 @@ void loop() {
     Serial.println("Water pump activated");
     while (buttonPump.isButtonPressed()){
     //activate pump
-
+    /*******************/
+    //activate buzzer
+    /*****************/
     //update watchdog
-    yield();
+    delay(1);
     }
   }
 
   delay(1);
 
-  //if () {}
+  if (soilMoisture.readSoilSensorValue() <= soilThreshold) {
+    while (soilMoisture.readSoilSensorValue() <= soilThreshold) {
+      //activate pump
+      /******************/
+
+      //activate buzzer
+      /*****************/
+
+      //update watchdog
+      delay(1);
+    }
+  }
   
   delay(500);
   //display.clearDisplay();
