@@ -3,6 +3,7 @@
 #define _LED_H
 
 #include <Arduino.h>
+#include <ChainableLED.h>
 #include "Actuator.h"
 
 class Led : public Actuator {
@@ -19,6 +20,9 @@ public:
 
     void off();
     void on();
+    
+    void statusLEDStartupCycle();
+  
 
     /******Work in progress*******/
     void setColor(); //arg?
