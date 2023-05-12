@@ -3,8 +3,14 @@
 #define _LED_H
 
 #include <Arduino.h>
-#include <ChainableLED.h>
 #include "Actuator.h"
+
+#define indexTemp 1
+#define indexWaterlevel 0
+#define NUM_LEDS 2
+#define MAX_LUM 255
+#define MID_LUM 125
+#define LOW_LUM 10
 
 class Led : public Actuator {
 public:
@@ -19,10 +25,7 @@ public:
     void blinkInternalLED();
 
     void off();
-    void on();
-    
-    void statusLEDStartupCycle();
-  
+    void on();  
 
     /******Work in progress*******/
     void setColor(); //arg?

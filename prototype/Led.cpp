@@ -1,4 +1,5 @@
 #include "Led.h"
+#define NUM_LEDS 2
 
 void Led::blinkInternalLED(){
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
@@ -14,3 +15,5 @@ void Led::off(){
 void Led::on(){
   digitalWrite(this->wpin, HIGH);   // turn the LED on (HIGH is the voltage level)
 }
+
+
