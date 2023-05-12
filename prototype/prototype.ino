@@ -32,7 +32,7 @@ using namespace std;
 #include "LightSensor.h"
 #include "Soil.h"
 #include "WaterPump.h"
-
+#include "Buzzer.h"
 
 /**PIN LAYOUT********************************************************************************/
 #define PIN_SOIL A0
@@ -89,6 +89,7 @@ LightSensor lightSensor(pinLight);
 Soil soilMoisture;
 WaterPump waterpump(PIN_RELAY);
 ChainableLED leds(PIN_STATUS_LED_CLK_PIN, PIN_STATUS_LED_DATA_PIN, NUM_LEDS);
+Buzzer buzzer(PIN_BUZZER);
 
 
 /**GLOBAL VARIABLES********************************************************************************/
@@ -247,7 +248,7 @@ void loop() {
     yield();
   }
   */
-  
+  buzzer.buzz();
   delay(2000);
 
 
