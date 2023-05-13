@@ -113,4 +113,73 @@ void check()
     delay(1000);
   }
 }
+
+void waterlevelPercent(){
+
+  while (1)
+  {
+    uint32_t touch_val = 0;
+    uint8_t trig_section = 0;
+
+
+    getLow8SectionValue();
+    getHigh12SectionValue();
+
+    for (int i = 0 ; i < 8; i++) {
+      if (low_data[i] > THRESHOLD) {
+        touch_val |= 1 << i;
+      }
+    }
+
+    for (int i = 0 ; i < 12; i++) {
+      if (high_data[i] > THRESHOLD) {
+        touch_val |= (uint32_t)1 << (8 + i);
+      }
+    }
+
+    while (touch_val & 0x01)
+    {
+      trig_section++;
+      touch_val >>= 1;
+    }
+    Serial.print("water level = ");
+    Serial.print(trig_section * 5);
+    Serial.println("% ");
+    delay(1000);
+  }
+}
+
+void waterlevelPercentTest(){
+
+  uint32_t touch_val = 0;
+  uint8_t trig_section = 0;
+
+
+  getLow8SectionValue();
+  getHigh12SectionValue();
+
+  for (int i = 0 ; i < 8; i++) {
+    if (low_data[i] > THRESHOLD) {
+      touch_val |= 1 << i;
+    }
+  }
+
+  for (int i = 0 ; i < 12; i++) {
+    if (high_data[i] > THRESHOLD) {
+      touch_val |= (uint32_t)1 << (8 + i);
+    }
+  }
+
+  while (touch_val & 0x01)
+  {
+    trig_section++;
+    touch_val >>= 1;
+  }
+  Serial.print("water level = ");
+  Serial.print(trig_section * 5);
+  Serial.println("% ");
+  delay(1000);
+}
+
+
 #endif

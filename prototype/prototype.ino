@@ -5,14 +5,20 @@ Pauline DUPUY and Bastian KROHG
 C++ Arduino project - Automated / connected greenhouse
 
   Operational status of system components: 
-    Soil moisture sensor:                     .
-    Water Level indicator:                    .
-    LCD Screen:                               .
-    Water Pump + Relay:                       .
-    Buzzer:                                   .
-    Temperature&Humidity sensor:              .
+    Soil moisture sensor:                     OK (need to generate message)
+    Water Level indicator:                    PROBLEM: READING VALUE 0%
+    LCD Screen:                               Missing display message creation
+    Water Pump + Relay:                       OK
+    Buzzer:                                   Not yet tested
+    Temperature&Humidity sensor:              TEMP: OK; HUMID: READING ONLY 0
     LED Chain:                                OK (consider trying class integration)
-    Button:                                   .
+    Button:                                   OK
+    Temperature too high => Temp light red:    .     
+    
+    Water level too low control block:        Not yet implemented
+    Error messages:                           Not yet implemented
+    Warning messages:                         Not yet implemented
+    Plant caretaker info messages by email:   Not yet implemented
 *****************************************************/
 
 /**THIRDPARTY LIBRARIES********************************************************************************/
@@ -32,48 +38,31 @@ using namespace std;
 #include "LightSensor.h"
 #include "Soil.h"
 #include "WaterPump.h"
+#include "Waterlevel.h"
 #include "Buzzer.h"
+#include "TempHumidity.h"
 
 /**PIN LAYOUT********************************************************************************/
-#define PIN_SOIL A0
+//#define PIN_LIGHT_SENSOR = A0
 //Waterlevel I2C --> Wire.h
 //LCD Screen I2C --> Wire.h
+#define PIN_SOIL A0
 #define PIN_RELAY D3
 #define PIN_WATERPUMP D7 //only needs to be high by default to power water pump
-#define PIN_BUZZER D6
-//#define PIN_TEMP_HUMIDITY D7
+#define PIN_BUZZER D9 //need to test
+#define PIN_TEMP_HUMIDITY D7
 #define PIN_STATUS_LED D8
 #define PIN_STATUS_LED_CLK_PIN D8
 #define PIN_STATUS_LED_DATA_PIN D4
-#define PIN_BUTTON_PUMP_CTRL D9 //need to test if it works as it is on the grove UART pin
-
-/**********************************************************************************/
-//TO BE REMOVED
-const int pinLight = A0;
-//const int pinButtonLED = D7; 
-//const int pinButtonPump = D8;
-const int pinLED = D9;
-const int pinWPump = D8;
-//const int pinSoil = ?; //pb - need more analog pins or to multiplex A0!
-/**********************************************************************************/
+#define PIN_BUTTON_PUMP_CTRL D6
 
 /**TEMPERATURE AND HUMIDITY SENSOR CONFIGURATION********************************************************************************/
-//temp & humidity sensor
+//from <DHT.h>
 #define DHTTYPE DHT22   // DHT 22  (AM2302)
-#define DHTPIN D7     // what pin we're connected to（DHT10 and DHT20 don't need define it）
-DHT dht(DHTPIN, DHTTYPE);   //   DHT11 DHT21 DHT22
-#if defined(ARDUINO_ARCH_AVR)
-    #define debug  Serial
-#elif defined(ARDUINO_ARCH_SAMD) ||  defined(ARDUINO_ARCH_SAM)
-    #define debug  SerialUSB
-#else
-    #define debug  Serial
-#endif
+#define DHTPIN D7       // what pin we're connected to（DHT10 and DHT20 don't need define it）
 
 /**SOIL MOISTURE SENSOR CONFIGURATION********************************************************************************/
 #define SOIL_MOISTURE_THRESHOLD 300
-//to be removed
-#define soilThreshold 300
 
 /**LED CHAIN CONFIGURATION********************************************************************************/
 #define NUM_LEDS 2
@@ -81,32 +70,45 @@ DHT dht(DHTPIN, DHTTYPE);   //   DHT11 DHT21 DHT22
 /**OBJECT CREATION********************************************************************************/
 rgb_lcd lcd; 
 //Display display(lcd); //problem
-//Button buttonLED(pinButtonLED);
-//Button buttonPump(pinButtonPump);
 Button buttonPumpCtrl(PIN_BUTTON_PUMP_CTRL);
-//Led led(pinLED);
-LightSensor lightSensor(pinLight);
-Soil soilMoisture;
+//LightSensor lightSensor(PIN_LIGHT_SENSOR);
+//Soil soilMoisture;
+Soil soilMoisture(PIN_SOIL);
 WaterPump waterpump(PIN_RELAY);
 ChainableLED leds(PIN_STATUS_LED_CLK_PIN, PIN_STATUS_LED_DATA_PIN, NUM_LEDS);
 Buzzer buzzer(PIN_BUZZER);
-
+TemperatureSensor temperatureSensor(DHTPIN, DHTTYPE);
+HumiditySensor humiditySensor(DHTPIN,DHTTYPE);
+WaterlevelSensor waterlevelSensor;
 
 /**GLOBAL VARIABLES********************************************************************************/
 uint8_t luminosity = LOW_LUM;
 
-bool isOverheadLightOn = false;
-
 String displaymessage="";
-String temperature_message=" Temperature: ";
-String humidity_message=" Humidity: ";
-String soil_moisture_message=" Soil Moisture: ";
-String waterlevel_message=" Water Level: ";
-String warning_message="USER WARNING: ";
-String error_message="ERROR: ";
+String temperature_message="";
+String humidity_message="";
+String soil_moisture_message="";
+String waterlevel_message="";
+String warning_message=" USER WARNING: ";
+String error_message=" ERROR: ";
 
 /**SUPPORTING FUNCTIONS********************************************************************************/
-/**LED FUNCTIONS********************************************************************************/
+  /**LED FUNCTIONS********************************************************************************/
+/*void ledGlobalAlarmSimple(){
+  for (int j=0; j<3; j++){
+    uint8_t pos = 0;
+    for (uint8_t i=0; i<NUM_LEDS; i++)
+    {
+      if (i==pos)
+        leds.setColorRGB(i, MAX_LUM, 0, 0);  
+      else
+        leds.setColorRGB(i, 0, 0, MAX_LUM); 
+    }
+    delay(250);
+
+    pos = (pos+1) % NUM_LEDS;
+  }
+}*/
 void ledGlobalAlarm(){
   uint8_t pos = 0;
   for (int j=0; j<25; j++){
@@ -123,7 +125,7 @@ void ledGlobalAlarm(){
   }
 }
 //if ambient temp > threshold then set temperature status led to red, else led is off/luminosity @ 10 to save energy
-//Temperature light is led with index 1
+  //Temperature light is led with index 1
 void setWarningLightTemp(){
   //index, byte red, byte green, byte blue
   leds.setColorRGB(indexTemp, MAX_LUM, 0, 0);  
@@ -132,7 +134,7 @@ void setNormalStateTempLight(){
   leds.setColorRGB(indexTemp, 0, luminosity, 0);
 }
 //if water level < minimum then set water level status led to red, else led is off/luminosity @ 10 to save energy
-//Water level light is led with index 0
+  //Water level light is led with index 0
 void setWarningLightWaterlevel(){
   //index, byte red, byte green, byte blue
   leds.setColorRGB(indexWaterlevel, MAX_LUM, 0, 0);  
@@ -178,8 +180,8 @@ void blink(){
   digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
   delay(1000);    
 }
-void toggleLED(bool isOverheadLightOn, Led led){
-  if (isOverheadLightOn){
+void toggleLED(bool isLedOn, Led led){
+  if (isLedOn){
     Serial.println("LED On");
     led.on();
   } else {
@@ -196,6 +198,8 @@ void displayAlert();
 void alert_waterLvlLow(){
   setWarningLightWaterlevel();
   //buzzer
+  buzzer.buzz();
+
 }
 //temp too high
   //Temperature status led => RED
@@ -203,17 +207,71 @@ void alert_waterLvlLow(){
 void alert_temperatureHigh(){
   setWarningLightTemp();
   //buzzer
+  buzzer.buzz();
+
 }
 //if soil moisture low
   //=>water lvl status led => purple
 void alert_soilMoistureLow(){
   setWarningLightSoil();
   //buzzer
+  buzzer.buzz();
 }
 
+/**DISPLAY FUNCTIONS********************************************************************************/
+/*
+void lcd_display_msg_autoscroll(rgb_lcd lcd, string displaymsg){
+  lcd.begin(16,2);
 
+      // set the cursor to (0,0):
+    lcd.setCursor(0, 0);
+    
+    
+    // print from 0 to 9:
+    for (int thisChar = 0; thisChar < 10; thisChar++) {
+        lcd.print(thisChar);
+        delay(500);
+    }
 
+    // set the cursor to (16,1):
+    lcd.setCursor(16, 1);
+    // set the display to automatically scroll:
+    lcd.autoscroll();
+    
+    // print from 0 to 9:
+    for (int thisChar = 0; thisChar < 10; thisChar++) {
+        lcd.print(thisChar);
+        delay(500);
+    }
+    
+    // turn off automatic scrolling
+    lcd.noAutoscroll();
 
+    // clear screen for the next loop:
+    lcd.clear();
+}*/
+String createDisplayMessage(){
+  //get soil moisture data
+  soil_moisture_message=" Soil Moisture: ";
+  soil_moisture_message += soilMoisture.readSoilSensorValue();
+  //get temperature and humidity data
+  temperature_message=" Temperature: ";
+  temperature_message+=temperatureSensor.readTemperature(false); //true==Fahrenheit, false==Celsius
+  humidity_message=" Humidity: ";
+  humidity_message+=humiditySensor.readHumidity();
+  //get water level data
+  waterlevel_message=waterlevelSensor.waterlevelPercentString();
+  //concatenate display message
+  displaymessage = "";
+  displaymessage += soil_moisture_message;
+  displaymessage += temperature_message;
+  displaymessage += humidity_message;
+  displaymessage += waterlevel_message;
+
+  //error / warning messages
+
+  return displaymessage;
+}
 
 
 
@@ -224,15 +282,23 @@ void setup() {
 
   //Waterpump / relay
   pinMode(PIN_RELAY, OUTPUT);
-  //pinMode(PIN_WATERPUMP, OUTPUT);
+
   //keep pump off by default
   digitalWrite(PIN_RELAY,LOW);
 
+  //buzzer off by default
+  buzzer.off();
+
   //Button is configured as input in Button.h
-  
+  pinMode(PIN_BUTTON_PUMP_CTRL, INPUT);
+  //lcd
+  lcd.begin(16, 2);
+  // Print a message to the LCD.
+  lcd.print("I'm thirsty!");
+
+  Serial.begin(9600);
+
 }
-
-
 
 /**MAIN********************************************************************************/
 void loop() {
@@ -240,30 +306,34 @@ void loop() {
   
   //ledGlobalAlarm();
   delay(1);
-  /*
-  if (buttonPumpCtrl.isButtonPressed()){
-    waterpump.activateIrrigationSystem2s();
-    yield();
+
+  /**CREATE DISPLAY MESSAGE WITH SENSOR INFORMATION***********************************/
+  displaymessage = createDisplayMessage();
+  //lcd.print(displaymessage); //need to activate autoscroll
+  Serial.println(displaymessage);
+
+  /**WATER PUMP CONTROL STRUCTURE*****************************************************/
+  /*waterlevelSensor.waterlevelOK() &&*/ 
+  if (buttonPumpCtrl.isButtonPressed() || soilMoisture.soilMoistureUnderThreshold()){
+    waterpump.on();
+    lcd.display();
+    buzzer.buzz();
+    delay(50);
   } else {
-    yield();
+    //waterpump.activateIrrigationSystem2s();
+    waterpump.off();
+    lcd.noDisplay();
+    /*if (!waterlevelSensor.waterlevelOK()){
+      //warning_message += "WARNING: WATER LEVEL LOW";
+      Serial.println("WARNING: WATER LEVEL LOW");
+    }*/
+    
+    delay(50);
   }
-  */
-  buzzer.buzz();
-  delay(2000);
-
-
-
+  
   //TODO
-
-  //Read sensors to obtain new data, store temporarily
+  //Display message on lcd screen with autoscroll
   /********************************/
-
-  //Create Display message for lcd screen
-  /********************************/
-
-  //Display message
-  /********************************/
-
 
   //Actions:
   //if water level too low, activate alarm and block watering functionality

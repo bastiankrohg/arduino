@@ -24,8 +24,12 @@ public:
     int readDigitalSensorValue(){
       return digitalRead(this->rpin);
     }
+    void updateSensorValue(int value){
+      this->sensorValue = value;
+    }
 //private:
-//protected:
+protected:
+  int sensorValue;
 };
 
 #endif

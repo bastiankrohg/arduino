@@ -1,5 +1,5 @@
-#ifndef BUZZER_H_
-#define BUZZER_H_
+#ifndef _BUZZER_H
+#define _BUZZER_H
 
 #include "Actuator.h"
 
@@ -21,7 +21,10 @@ public:
       digitalWrite(this->wpin, HIGH);
       delay(1000);
       digitalWrite(this->wpin, LOW);
-      delay(1000);
+      //delay(1000);
+    }
+    void off(){
+      digitalWrite(this->wpin, LOW);
     }
 };
 

@@ -1,6 +1,8 @@
 #ifndef _SOIL_H
 #define _SOIL_H
 
+#define SOIL_MOISTURE_THRESHOLD 300
+
 class Soil : public Sensor {
 public: 
   //constructors:
@@ -16,6 +18,9 @@ public:
   */
   int readSoilSensorValue(){
     return this->readAnalogSensorValue();  
+  }
+  bool soilMoistureUnderThreshold(){
+    return (readSoilSensorValue() <= SOIL_MOISTURE_THRESHOLD);
   }
 
 private: 

@@ -14,17 +14,19 @@ public:
 
     //methods
     int readButton(){
-        return digitalRead(this->rpin);
+      return digitalRead(this->rpin);
     }
     bool boolIsButtonPressed(){
-        return (digitalRead(this->rpin)==HIGH);
+      return (digitalRead(this->rpin)==LOW);
     }
     //is button pressed
   int isButtonPressed(){
     int state = 0;
     if(digitalRead(this->getReadPin())){
-      while(digitalRead(this->getReadPin()));
-      state = 1;
+      while(digitalRead(this->getReadPin())){
+        state = 1;
+        return state;
+      }
     }
     return state;
   }

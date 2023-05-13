@@ -28,6 +28,7 @@ public:
     this->on();
     delay(2000);
     this->off();
+    delay(1000);
   }
 
 };
