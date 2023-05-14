@@ -5,6 +5,11 @@ Pauline DUPUY and Bastian KROHG
 C++ Arduino project - Automated / connected greenhouse
 
   Operational status of system components:
+    Exceptions:                                   Not yet implemented
+    Use of STL Data Structures:               Not yet implemented
+    Operator redefinition:                        Not yet implemented
+    Iterators:                                    Not yet implemented
+
     Sensors: 
       * Soil moisture sensor:                     OK!
       * Water Level indicator:                    PROBLEM: Sometimes the reading is stuck at last value 

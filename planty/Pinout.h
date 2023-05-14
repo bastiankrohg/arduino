@@ -5,7 +5,7 @@
 #include <iostream>
 #include "String.h"
 
-#include "rgb_lcd.h"
+#include <rgb_lcd.h>
 #include <DHT.h>
 #include <ChainableLED.h>
 
