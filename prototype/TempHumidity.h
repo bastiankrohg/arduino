@@ -2,6 +2,7 @@
 #define _TEMPHUMIDITY_H
 
 #include <DHT.h>
+#include "Led.h"
 
 #define Threshold_Hot 30 //°C
 #define Threshold_Cold 10 //°C
@@ -29,6 +30,19 @@ public:
     return error;
   }
 
+  /*void checkTemperature(LEDs& leds){
+    if (this->warningTemperature()!=No_Error){
+      leds.setWarningLightTemp();
+    }
+  }*/
+  bool temperatureStatusOK(){
+    bool state = true;
+    if (this->warningTemperature()!=No_Error){
+      state = false;
+    }
+    return state; 
+  }
+
   void updateTempData(int temperature){
     this->temperature = temperature;
   }
@@ -51,6 +65,13 @@ public:
       error = Air_Wet;
     }
     return error;
+  }
+  bool humidityStatusOK(){
+    bool state = true;
+    if (this->warningHumidity()!=No_Error){
+      state = false;
+    }
+    return state; 
   }
   void updateHumidityData(int humidity){
     this->humidity = humidity;

@@ -1,7 +1,8 @@
 #ifndef _SOIL_H
 #define _SOIL_H
 
-#define SOIL_MOISTURE_THRESHOLD 300
+#define SOIL_MOISTURE_THRESHOLD_LOW 300
+#define SOIL_MOISTURE_THRESHOLD_HIGH 1200
 
 class Soil : public Sensor {
 public: 
@@ -19,8 +20,15 @@ public:
   int readSoilSensorValue(){
     return this->readAnalogSensorValue();  
   }
-  bool soilMoistureUnderThreshold(){
-    return (readSoilSensorValue() <= SOIL_MOISTURE_THRESHOLD);
+  bool soilMoistureOK(){
+    int soil = this->readSoilSensorValue();
+    return (soil >= SOIL_MOISTURE_THRESHOLD_LOW && soil <= SOIL_MOISTURE_THRESHOLD_HIGH);
+  }
+  bool soilMoistureLow(){
+    return (readSoilSensorValue() <= SOIL_MOISTURE_THRESHOLD_LOW);
+  }
+  bool soilMoistureHigh(){
+    return (readSoilSensorValue() >= SOIL_MOISTURE_THRESHOLD_HIGH);
   }
 
 private: 
