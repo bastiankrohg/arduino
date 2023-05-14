@@ -6,7 +6,7 @@ using namespace std;
 
 #include "Component.h"
 
-class Sensor : public Component {
+class Sensor : public virtual Component {
 public: 
     //constructor
     Sensor() : Component {} {

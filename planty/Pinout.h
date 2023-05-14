@@ -55,7 +55,6 @@ void init_pins(){
   pinMode(PIN_BUTTON_PUMP_CTRL, INPUT);
 }
 
-
 /**OBJECT CREATION********************************************************************************/
 rgb_lcd lcd; 
 //Display display(lcd); //problem

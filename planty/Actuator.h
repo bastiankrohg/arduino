@@ -7,7 +7,7 @@ using namespace std;
 
 #include "Component.h"
 
-class Actuator : public Component {
+class Actuator : public virtual Component {
 public: 
     //constructor
     Actuator() : Component{} {
