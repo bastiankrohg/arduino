@@ -47,14 +47,6 @@ using namespace std;
 /**LED CHAIN CONFIGURATION********************************************************************************/
 #define NUM_LEDS 2
 
-/**INIT FUNCTION********************************************************************************/
-void init_pins(){
-  //Waterpump / relay
-  pinMode(PIN_RELAY, OUTPUT);
-  //Button is configured as input in Button.h
-  pinMode(PIN_BUTTON_PUMP_CTRL, INPUT);
-}
-
 /**OBJECT CREATION********************************************************************************/
 rgb_lcd lcd; 
 //Display display(lcd); //problem
@@ -69,6 +61,28 @@ Buzzer buzzer(PIN_BUZZER);
 TemperatureSensor temperatureSensor(DHTPIN, DHTTYPE);
 HumiditySensor humiditySensor(DHTPIN,DHTTYPE);
 WaterlevelSensor waterlevelSensor;
+
+/**INIT FUNCTION********************************************************************************/
+//initializes pins and lcd, as well as the initial state of the relay and buzzer!
+void init(){
+  //Waterpump / relay
+  pinMode(PIN_RELAY, OUTPUT);
+  //Button is configured as input in Button.h
+  pinMode(PIN_BUTTON_PUMP_CTRL, INPUT);
+
+  //watering is off by default
+  digitalWrite(PIN_RELAY,LOW);
+  
+  //buzzer off by default
+  buzzer.off();
+
+  //lcd
+  lcd.begin(16, 2);
+  // Print a message to the LCD.
+  lcd.print("I'm thirsty!");
+
+}
+
 
 /**GLOBAL VARIABLES********************************************************************************/
 uint8_t luminosity = LOW_LUM;

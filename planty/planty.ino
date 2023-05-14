@@ -41,15 +41,8 @@ C++ Arduino project - Automated / connected greenhouse
 void setup() {
   //initialize LED chain
   ledSetupColorCycle();
-  init_pins();
-  //keep pump off by default
-  digitalWrite(PIN_RELAY,LOW);
-  //buzzer off by default
-  buzzer.off();
-  //lcd
-  lcd.begin(16, 2);
-  // Print a message to the LCD.
-  lcd.print("I'm thirsty!");
+  init();
+
   Serial.begin(9600);
 }
 
