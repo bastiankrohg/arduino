@@ -10,8 +10,8 @@
 
 
 //Chainable leds
-#define indexTemp 1
-#define indexWaterlevel 0
+#define indexTemp 0
+#define indexWaterlevel 1
 #define NUM_LEDS 2
 #define MAX_LUM 255
 #define MID_LUM 125

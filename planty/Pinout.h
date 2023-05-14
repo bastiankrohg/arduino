@@ -63,24 +63,11 @@ HumiditySensor humiditySensor(DHTPIN,DHTTYPE);
 WaterlevelSensor waterlevelSensor;
 
 /**INIT FUNCTION********************************************************************************/
-//initializes pins and lcd, as well as the initial state of the relay and buzzer!
-void init(){
+void init_pins(){
   //Waterpump / relay
   pinMode(PIN_RELAY, OUTPUT);
   //Button is configured as input in Button.h
   pinMode(PIN_BUTTON_PUMP_CTRL, INPUT);
-
-  //watering is off by default
-  digitalWrite(PIN_RELAY,LOW);
-  
-  //buzzer off by default
-  buzzer.off();
-
-  //lcd
-  lcd.begin(16, 2);
-  // Print a message to the LCD.
-  lcd.print("I'm thirsty!");
-
 }
 
 
@@ -287,7 +274,7 @@ String createDisplayMessage(){
 
   return displaymessage;
 }
-/*void debug_print_in_serial(){
+void debug_print_in_serial(){
   Serial.println("Button: ");
   Serial.println(buttonPumpCtrl.isButtonPressed());
   Serial.println("Soil: ");
@@ -300,7 +287,7 @@ String createDisplayMessage(){
   Serial.println(!soilMoisture.soilMoistureHigh());
   Serial.println("Full condition: ");
   Serial.println(!waterlevelLow && !soilMoisture.soilMoistureHigh() && (buttonPumpCtrl.isButtonPressed() || soilMoisture.soilMoistureLow()));
-}*/
+}
 
 
 #endif

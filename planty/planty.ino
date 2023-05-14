@@ -41,8 +41,15 @@ C++ Arduino project - Automated / connected greenhouse
 void setup() {
   //initialize LED chain
   ledSetupColorCycle();
-  init();
-
+  init_pins();
+  //keep pump off by default
+  digitalWrite(PIN_RELAY,LOW);
+  //buzzer off by default
+  buzzer.off();
+  //lcd
+  lcd.begin(16, 2);
+  // Print a message to the LCD.
+  lcd.print("I'm thirsty!");
   Serial.begin(9600);
 }
 
@@ -89,6 +96,7 @@ void loop() {
   //lcd.print(displaymessage); //need to activate autoscroll
   Serial.println(displaymessage);
 
+  debug_print_in_serial();
   /**WATER PUMP CONTROL STRUCTURE*****************************************************/
     /*waterlevelSensor.waterlevelOK() &&*/
   /*if (waterlevelLow){
