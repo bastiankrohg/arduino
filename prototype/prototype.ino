@@ -37,6 +37,8 @@ void setup() {
   //initialize LED chain
   ledSetupColorCycle();
   init_pins();
+  pinMode(PIN_BUTTON_PUMP_CTRL,INPUT);
+
   //keep pump off by default
   digitalWrite(PIN_RELAY,LOW);
   //buzzer off by default
