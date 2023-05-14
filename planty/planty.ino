@@ -41,7 +41,12 @@ C++ Arduino project - Automated / connected greenhouse
 void setup() {
   //initialize LED chain
   ledSetupColorCycle();
-  init_pins();
+
+  //Waterpump / relay
+  pinMode(PIN_RELAY, OUTPUT);
+  //Button is configured as input in Button.h
+  pinMode(PIN_BUTTON_PUMP_CTRL, INPUT);
+
   //keep pump off by default
   digitalWrite(PIN_RELAY,LOW);
   //buzzer off by default
@@ -67,13 +72,18 @@ void loop() {
   } else {
     setNormalStateTempLight();
   }
+  delay(1);
+  
   /**Humidity**/
+  
   if (!humiditySensor.humidityStatusOK()){
     warning_message += " HUMIDITY "; 
     humidityWarning = true;
   } else {
     //
   }
+  delay(1);
+  
   /**Soil Moisture**/
   if (!soilMoisture.soilMoistureOK()){
     //setWarningLightSoil();
@@ -82,6 +92,9 @@ void loop() {
   } else {
     //setNormalStateSoilLight();
   }
+  delay(1);
+  
+  
   /**Water level**/
   if (!waterlevelSensor.waterlevelOK()) {
     setWarningLightWaterlevel();
@@ -89,14 +102,24 @@ void loop() {
     waterlevelLow = true;
   } else {
     setNormalStateWaterlevelLight();
+    waterlevelLow = false;
   }
+  delay(1);
+  
 
   /**CREATE DISPLAY MESSAGE WITH SENSOR INFORMATION***********************************/
   displaymessage = createDisplayMessage();
   //lcd.print(displaymessage); //need to activate autoscroll
   Serial.println(displaymessage);
+  
+  buttonState = digitalRead(PIN_BUTTON_PUMP_CTRL);
+  //buttonState = buttonPumpCtrl.readButton();
+  //buttonPumpCtrl.isButtonPressed();
+  
+  Serial.println(buttonState);
+  //debug_print_in_serial();
 
-  debug_print_in_serial();
+
   /**WATER PUMP CONTROL STRUCTURE*****************************************************/
     /*waterlevelSensor.waterlevelOK() &&*/
   /*if (waterlevelLow){
@@ -104,20 +127,20 @@ void loop() {
   } else {
     //Serial.println("False");
   }*/
- 
+  delay(1);
+  
 
-  if (!waterlevelLow && !soilMoisture.soilMoistureHigh() && (buttonPumpCtrl.isButtonPressed() || soilMoisture.soilMoistureLow())){
+  if (!waterlevelLow && !soilMoisture.soilMoistureHigh() && (buttonState || soilMoisture.soilMoistureLow())){
     waterpump.on();
     lcd.display();
     buzzer.buzz();
-    delay(1000);
   } else {
     //waterpump.activateIrrigationSystem2s();
     waterpump.off();
     lcd.noDisplay();
-    delay(1000);
   }
-  
+  delay(50);
+
   //TODO
     //Display message on lcd screen with autoscroll
     //if temperature too high, notify caretaker --> By msg / email?             => NOT YET

@@ -4,8 +4,8 @@
 #include <DHT.h>
 #include "Led.h"
 
-#define Threshold_Hot 30 //°C
-#define Threshold_Cold 10 //°C
+#define Threshold_Hot 100 //°F
+#define Threshold_Cold 0 //°F
 #define Threshold_Air_Dry 60.0//A définir
 #define Threshold_Air_Wet 70.0//A définir
 #define No_Error 0
@@ -19,12 +19,12 @@ public:
   TemperatureSensor(uint8_t pin, uint8_t type) : DHT{pin, type} {
   }
 
-  int warningTemperature(){
+  int warningTemperature(int temperature){
     int error = No_Error ; 
-    if (this->temperature<Threshold_Cold) {
+    if (temperature<Threshold_Cold) {
       error = Temperature_Cold;
     }
-    else if(this->temperature>Threshold_Hot) {
+    else if(temperature>Threshold_Hot) {
       error = Temperature_Hot;
     }
     return error;
@@ -37,7 +37,10 @@ public:
   }*/
   bool temperatureStatusOK(){
     bool state = true;
-    if (this->warningTemperature()!=No_Error){
+    int warning = 0;
+    warning = warningTemperature(this->temperature);
+    
+    if (warning != No_Error){
       state = false;
     }
     return state; 
@@ -56,19 +59,19 @@ public:
   HumiditySensor(uint8_t pin, uint8_t type) : DHT{pin, type} {
   }
 
-  int warningHumidity(){
+  int warningHumidity(int humidity){
     int error = No_Error ; 
-    if (this->humidity<Threshold_Air_Dry) {
+    if (humidity<Threshold_Air_Dry) {
       error = Air_Dry;
     }
-    else if(this->humidity>Threshold_Air_Wet) {
+    else if(humidity>Threshold_Air_Wet) {
       error = Air_Wet;
     }
     return error;
   }
   bool humidityStatusOK(){
     bool state = true;
-    if (this->warningHumidity()!=No_Error){
+    if (warningHumidity(this->humidity)!=No_Error){
       state = false;
     }
     return state; 

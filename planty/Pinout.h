@@ -34,7 +34,9 @@ using namespace std;
 #define PIN_STATUS_LED D8
 #define PIN_STATUS_LED_CLK_PIN D8
 #define PIN_STATUS_LED_DATA_PIN D4
-#define PIN_BUTTON_PUMP_CTRL D6
+#define PIN_BUTTON_PUMP_CTRL D5
+//#define PIN_BUTTON_PUMP_CTRL D6
+
 
 /**TEMPERATURE AND HUMIDITY SENSOR CONFIGURATION********************************************************************************/
 //from <DHT.h>
@@ -62,17 +64,10 @@ TemperatureSensor temperatureSensor(DHTPIN, DHTTYPE);
 HumiditySensor humiditySensor(DHTPIN,DHTTYPE);
 WaterlevelSensor waterlevelSensor;
 
-/**INIT FUNCTION********************************************************************************/
-void init_pins(){
-  //Waterpump / relay
-  pinMode(PIN_RELAY, OUTPUT);
-  //Button is configured as input in Button.h
-  pinMode(PIN_BUTTON_PUMP_CTRL, INPUT);
-}
-
 
 /**GLOBAL VARIABLES********************************************************************************/
 uint8_t luminosity = LOW_LUM;
+int buttonState=0;
 bool waterlevelLow = false;
 bool temperatureWarning = false;
 bool humidityWarning = false;
@@ -277,7 +272,7 @@ String createDisplayMessage(){
 void debug_print_in_serial(){
   Serial.println("Button: ");
   Serial.println(buttonPumpCtrl.isButtonPressed());
-  Serial.println("Soil: ");
+  Serial.println("Soil too low: ");
   Serial.println(soilMoisture.soilMoistureLow());
   Serial.println("Button + Soil: ");
   Serial.println((buttonPumpCtrl.isButtonPressed() || soilMoisture.soilMoistureLow()));
