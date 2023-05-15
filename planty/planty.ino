@@ -128,16 +128,18 @@ void loop() {
   //debug_print_in_serial();
 
   delay(1);
-  
-  try {
-    testBeforePumpOn();
-    Serial.println("Watering plant...");
-    waterpump.on();
-  } catch (const char *msg) {
-    error_message += msg;
-    cerr << msg << endl;
-    Serial.println(msg);
+  if (buttonState) {
+    try {
+      testBeforePumpOn();
+      Serial.println("Watering plant...");
+      waterpump.on();
+    } catch (const char *msg) {
+      error_message += msg;
+      cerr << msg << endl;
+      Serial.println(msg);
+    }
   }
+  
   /* NEED TO TEST IF NEW BLOCK WORKS
   if (!waterlevelLow && !soilMoisture.soilMoistureHigh() && (buttonState || soilMoisture.soilMoistureLow())){
     waterpump.on();
