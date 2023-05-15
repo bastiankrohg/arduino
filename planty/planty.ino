@@ -5,7 +5,9 @@ Pauline DUPUY and Bastian KROHG
 C++ Arduino project - Automated / connected greenhouse
 
   Operational status of system components:
-    Exceptions:                                   Not yet implemented
+    Exceptions:                                   OK! BUT not yet tested
+      * Throws an exception if any of the conditions blocking the watering functionality are true
+        * Throw function can be found in Pinout.h (testBeforePumpOn()), and the try is implemented in the loop() below.
     Use of STL Data Structures:                   OK! BUT needs to be tested on system
       * std::vector to store references to display message information
     Operator redefinition:                        Not yet implemented
@@ -127,7 +129,16 @@ void loop() {
 
   delay(1);
   
-
+  try {
+    testBeforePumpOn();
+    Serial.println("Watering plant...");
+    waterpump.on();
+  } catch (const char *msg) {
+    error_message += msg;
+    cerr << msg << endl;
+    Serial.println(msg);
+  }
+  /* NEED TO TEST IF NEW BLOCK WORKS
   if (!waterlevelLow && !soilMoisture.soilMoistureHigh() && (buttonState || soilMoisture.soilMoistureLow())){
     waterpump.on();
     lcd.display();
@@ -137,7 +148,9 @@ void loop() {
     waterpump.off();
     lcd.noDisplay();
   }
+  */
   delay(50);
+  
 
   //TODO
     //Display message on lcd screen with autoscroll

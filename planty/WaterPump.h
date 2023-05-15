@@ -12,7 +12,6 @@ public:
   WaterPump(uint8_t wpin) : Actuator{}{
     this->wpin = wpin;
   }
-
   void on(){
     digitalWrite(this->wpin, HIGH);   // turn the water pump on (HIGH is the voltage level)
   }

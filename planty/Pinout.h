@@ -289,7 +289,7 @@ void updateMessageContent(){
   waterlevel_message=waterlevelSensor.waterlevelPercentString();
 
   //error / warning messages
-  
+
 }
 
 /**
@@ -322,5 +322,9 @@ void debug_print_in_serial(){
   Serial.println(!waterlevelLow && !soilMoisture.soilMoistureHigh() && (buttonPumpCtrl.isButtonPressed() || soilMoisture.soilMoistureLow()));
 }
 
-
+void testBeforePumpOn(){
+  if (!waterlevelLow && !soilMoisture.soilMoistureHigh() && (buttonState || soilMoisture.soilMoistureLow())){
+    throw "Error: Could not turn on water pump!";
+  }
+}
 #endif
