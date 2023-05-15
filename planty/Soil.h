@@ -11,12 +11,6 @@ public:
   }
   Soil(uint8_t rpin) : Sensor{rpin} {
   }
-
-  /*
-  int readSoilMoistureSensor(){
-    return analogRead(this->rpin);
-  }
-  */
   int readSoilSensorValue(){
     return this->readAnalogSensorValue();  
   }

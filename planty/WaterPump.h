@@ -32,13 +32,13 @@ public:
     delay(this->wateringperiod * 1000);
     this->off();
   }
-
   void activateIrrigationSystem2s(){
     this->on();
     delay(2000);
     this->off();
     delay(1000);
   }
+
 private: 
   //watering period in bursts of 'wateringperiod' seconds at a time
   int wateringperiod;

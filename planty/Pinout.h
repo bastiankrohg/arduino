@@ -1,8 +1,10 @@
+#include <iterator>
 #ifndef _PINOUT_H
 #define _PINOUT_H
 
 /**THIRDPARTY LIBRARIES********************************************************************************/
 #include <iostream>
+#include <vector>
 #include "String.h"
 
 #include <rgb_lcd.h>
@@ -37,7 +39,6 @@ using namespace std;
 #define PIN_BUTTON_PUMP_CTRL D5
 //#define PIN_BUTTON_PUMP_CTRL D6
 
-
 /**TEMPERATURE AND HUMIDITY SENSOR CONFIGURATION********************************************************************************/
 //from <DHT.h>
 #define DHTTYPE DHT22   // DHT 22  (AM2302)
@@ -64,7 +65,6 @@ TemperatureSensor temperatureSensor(DHTPIN, DHTTYPE);
 HumiditySensor humiditySensor(DHTPIN,DHTTYPE);
 WaterlevelSensor waterlevelSensor;
 
-
 /**GLOBAL VARIABLES********************************************************************************/
 uint8_t luminosity = LOW_LUM;
 int buttonState=0;
@@ -80,6 +80,13 @@ String soil_moisture_message="";
 String waterlevel_message="";
 String warning_message=" USER WARNING: ";
 String error_message=" ERROR: ";
+
+vector<String *> v_messages = {&temperature_message, &humidity_message, &soil_moisture_message, &waterlevel_message, &warning_message, &error_message};
+
+/**
+* @brief Message delay on screen in milliseconds, !! BLOCKS SYSTEM FOR 5s !!
+*/
+#define MESSAGE_DELAY 5000 //5s pause between showing each message on the lcd screen / serial monitor
 
 /**SUPPORTING FUNCTIONS********************************************************************************/
 
@@ -269,6 +276,37 @@ String createDisplayMessage(){
 
   return displaymessage;
 }
+void updateMessageContent(){
+  //get soil moisture data
+  soil_moisture_message=" Soil Moisture: ";
+  soil_moisture_message += soilMoisture.readSoilSensorValue();
+  //get temperature and humidity data
+  temperature_message=" Temperature: ";
+  temperature_message+=temperatureSensor.readTemperature(false); //true==Fahrenheit, false==Celsius
+  humidity_message=" Humidity: ";
+  humidity_message+=humiditySensor.readHumidity();
+  //get water level data
+  waterlevel_message=waterlevelSensor.waterlevelPercentString();
+
+  //error / warning messages
+  
+}
+
+/**
+* @brief Displays vector contents on lcd screen 
+*/
+void displayStringVector(){
+  updateMessageContent();
+
+  vector<String*>::iterator it = v_messages.begin();
+  for (; it!=v_messages.end(); it++) {
+    String tmp = *(*it);
+    lcd.println(tmp);
+    Serial.println(tmp);
+    delay(MESSAGE_DELAY);
+  }
+}
+
 void debug_print_in_serial(){
   Serial.println("Button: ");
   Serial.println(buttonPumpCtrl.isButtonPressed());
