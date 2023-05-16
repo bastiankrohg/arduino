@@ -10,8 +10,6 @@ C++ Arduino project - Automated / connected greenhouse
         * Throw function can be found in Pinout.h (testBeforePumpOn()), and the try is implemented in the loop() below.
     Use of STL Data Structures:                   OK! BUT needs to be tested on system
       * std::vector to store references to display message information
-    Operator redefinition:                        Not yet implemented
-      * 
     Iterators:                                    OK
       * Iterate over String pointers in vector that stores display information            
     Sensors: 
@@ -33,9 +31,10 @@ C++ Arduino project - Automated / connected greenhouse
         * if soil moisture too low, activate watering until moisture level normalized
         * if button pushed, manually activate watering 
           (priority is given to the water level indicator => doesn't work if water level is too low)
-      Error messages:                           Not yet implemented
+      Error messages:                           OK! Exception adds message that states that the pump cannot be started
       Warning messages:                         OK, but not yet displayed/treated
       Plant caretaker info messages by email:   Not yet implemented
+      Operator redefinition:                    Not yet implemented 
 *****************************************************/
 
 /**Pinout.h contains the project's pin layout, macros and more**********************/
@@ -66,6 +65,8 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   delay(1);
+  //lcd.clear();
+  warning_message = "";
 
   /**CHECK STATES TO UPDATE WARNING LIGHTS***********************************/
   /**Temperature**/
@@ -83,10 +84,9 @@ void loop() {
   if (!humiditySensor.humidityStatusOK()){
     warning_message += " W_HUMIDITY "; 
     humidityWarning = true;
-  } else {
-    //
   }
   delay(1);
+  
   
   /**Soil Moisture**/
   if (!soilMoisture.soilMoistureOK()){
@@ -112,47 +112,41 @@ void loop() {
   
 
   /**CREATE DISPLAY MESSAGE WITH SENSOR INFORMATION***********************************/
-  //displaymessage = createDisplayMessage();
-  //lcd.print(displaymessage); //need to activate autoscroll
-  //Serial.println(displaymessage);
-  
   //Create message with relevant sensor information and displays on screen and in serial monitor
   //!!! Blocks for MESSAGE_DELAY seconds minimum per now
-  displayStringVector();
+  displayStringVector(loop_index);
 
   buttonState = digitalRead(PIN_BUTTON_PUMP_CTRL);
-  //buttonState = buttonPumpCtrl.readButton();
-  //buttonPumpCtrl.isButtonPressed();
-  
-  //Serial.println(buttonState);
-  //debug_print_in_serial();
 
   delay(1);
-  if (buttonState) {
+  if (buttonState || soilMoisture.soilMoistureLow()) {
     try {
       testBeforePumpOn();
       Serial.println("Watering plant...");
+      lcd.print("Watering plant...");
       waterpump.on();
+      //delay(WATERING_BURST);
+      //waterpump.off();
     } catch (const char *msg) {
       error_message += msg;
       cerr << msg << endl;
       Serial.println(msg);
     }
+  } else {
+    waterpump.off();
   }
-  
-  /* NEED TO TEST IF NEW BLOCK WORKS
+  //index which determines which data is displayed on the LCD screen
+  //loop_index++;
+  /*
   if (!waterlevelLow && !soilMoisture.soilMoistureHigh() && (buttonState || soilMoisture.soilMoistureLow())){
     waterpump.on();
-    lcd.display();
     buzzer.buzz();
+    lcd.print("Watering...");
   } else {
-    //waterpump.activateIrrigationSystem2s();
     waterpump.off();
-    lcd.noDisplay();
   }
-  */
   delay(50);
-  
+  */
 
   //TODO
     //Display message on lcd screen with autoscroll

@@ -1,3 +1,4 @@
+#include <sys/_stdint.h>
 #include <iterator>
 #ifndef _PINOUT_H
 #define _PINOUT_H
@@ -73,13 +74,15 @@ bool temperatureWarning = false;
 bool humidityWarning = false;
 bool soilWarning = false;
 
+int loop_index=0;
+
 String displaymessage="";
 String temperature_message="";
 String humidity_message="";
 String soil_moisture_message="";
 String waterlevel_message="";
-String warning_message=" USER WARNING: ";
-String error_message=" ERROR: ";
+String warning_message="";
+String error_message="";
 
 vector<String *> v_messages = {&temperature_message, &humidity_message, &soil_moisture_message, &waterlevel_message, &warning_message, &error_message};
 
@@ -87,6 +90,7 @@ vector<String *> v_messages = {&temperature_message, &humidity_message, &soil_mo
 * @brief Message delay on screen in milliseconds, !! BLOCKS SYSTEM FOR 5s !!
 */
 #define MESSAGE_DELAY 5000 //5s pause between showing each message on the lcd screen / serial monitor
+#define WATERING_BURST 7000
 
 /**SUPPORTING FUNCTIONS********************************************************************************/
 
@@ -256,12 +260,13 @@ void lcd_display_msg_autoscroll(rgb_lcd lcd, string displaymsg){
 }*/
 String createDisplayMessage(){
   //get soil moisture data
-  soil_moisture_message=" Soil Moisture: ";
+  soil_moisture_message="Soil Moisture: ";
   soil_moisture_message += soilMoisture.readSoilSensorValue();
   //get temperature and humidity data
-  temperature_message=" Temperature: ";
+  temperature_message="Temp: ";
   temperature_message+=temperatureSensor.readTemperature(false); //true==Fahrenheit, false==Celsius
-  humidity_message=" Humidity: ";
+  temperature_message+="°C";
+  humidity_message="Humidity: ";
   humidity_message+=humiditySensor.readHumidity();
   //get water level data
   waterlevel_message=waterlevelSensor.waterlevelPercentString();
@@ -278,12 +283,13 @@ String createDisplayMessage(){
 }
 void updateMessageContent(){
   //get soil moisture data
-  soil_moisture_message=" Soil Moisture: ";
+  soil_moisture_message="Soil: ";
   soil_moisture_message += soilMoisture.readSoilSensorValue();
   //get temperature and humidity data
-  temperature_message=" Temperature: ";
+  temperature_message="Temp: ";
   temperature_message+=temperatureSensor.readTemperature(false); //true==Fahrenheit, false==Celsius
-  humidity_message=" Humidity: ";
+  temperature_message+=" C";
+  humidity_message="Humidity: ";
   humidity_message+=humiditySensor.readHumidity();
   //get water level data
   waterlevel_message=waterlevelSensor.waterlevelPercentString();
@@ -295,15 +301,26 @@ void updateMessageContent(){
 /**
 * @brief Displays vector contents on lcd screen 
 */
-void displayStringVector(){
+void displayStringVector(int loop_index){
   updateMessageContent();
+  
+  //autoscroll
+  //lcd.autoscroll();
 
   vector<String*>::iterator it = v_messages.begin();
-  for (; it!=v_messages.end(); it++) {
+  for (; it!=v_messages.end(); loop_index++) {
     String tmp = *(*it);
-    lcd.println(tmp);
-    Serial.println(tmp);
-    delay(MESSAGE_DELAY);
+    if (loop_index % 50000 == 0) {
+      lcd.clear();
+      if (tmp != "") {
+        Serial.println(tmp);
+        lcd.print(tmp);
+        //delay(100);
+      }
+      it++;
+      loop_index = 0;
+    }
+
   }
 }
 
@@ -323,7 +340,11 @@ void debug_print_in_serial(){
 }
 
 void testBeforePumpOn(){
-  if (!waterlevelLow && !soilMoisture.soilMoistureHigh() && (buttonState || soilMoisture.soilMoistureLow())){
+  if (waterlevelLow || soilMoisture.soilMoistureHigh()){
+    Serial.print("Waterlevel test: ");
+    Serial.println(waterlevelLow);
+    Serial.print("Soil Moisture test: ");
+    Serial.println(soilMoisture.soilMoistureHigh());
     throw "Error: Could not turn on water pump!";
   }
 }

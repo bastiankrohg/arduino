@@ -9,6 +9,7 @@ unsigned char high_data[12] = {0};
 
 #define NO_TOUCH       0xFE
 #define THRESHOLD      100
+//#define THRESHOLD_PERCENT 0
 #define THRESHOLD_PERCENT 10
 #define ATTINY1_HIGH_ADDR   0x78
 #define ATTINY2_LOW_ADDR   0x77
@@ -65,7 +66,7 @@ public:
 
   String waterlevelPercentString(){
     int level = this->getWaterlevel();
-    String water_level = " Water level: ";
+    String water_level = "Water level: ";
     water_level += level;
     water_level += "% ";
     return water_level;
