@@ -5,10 +5,10 @@ Pauline DUPUY and Bastian KROHG
 C++ Arduino project - Automated / connected greenhouse
 
   Operational status of system components:
-    Exceptions:                                   OK! BUT not yet tested
+    Exceptions:                                   OK! 
       * Throws an exception if any of the conditions blocking the watering functionality are true
         * Throw function can be found in Pinout.h (testBeforePumpOn()), and the try is implemented in the loop() below.
-    Use of STL Data Structures:                   OK! BUT needs to be tested on system
+    Use of STL Data Structures:                   OK!
       * std::vector to store references to display message information
     Iterators:                                    OK
       * Iterate over String pointers in vector that stores display information            
@@ -17,11 +17,11 @@ C++ Arduino project - Automated / connected greenhouse
       * Water Level indicator:                    PROBLEM: Sometimes the reading is stuck at last value 
       * Temperature & Humidity sensor:            TEMP: OK; HUMID: READING ONLY 0
     Actuators:
-      * LCD Screen:                               MAYBE OK! Missing autoscroll, and problem with class Display
+      * LCD Screen:                               OK! But not implemented with Display class
       * Water Pump + Relay:                       OK!
-      * Buzzer:                                   OK! BUT not yet tested
+      * Buzzer:                                   OK! 
       * Button:                                   OK!
-      * LED Chain:                                OK! BUT problem when written as a class (problem with constructor)
+      * LED Chain:                                OK!
         * Status/Warning lights:                  OK!
           * Temperature too high or too low => Temp light red, else green
           * Water level too low (<10%) => Water lvl light red, else green
@@ -33,7 +33,8 @@ C++ Arduino project - Automated / connected greenhouse
           (priority is given to the water level indicator => doesn't work if water level is too low)
       Error messages:                           OK! Exception adds message that states that the pump cannot be started
       Warning messages:                         OK, but not yet displayed/treated
-      Plant caretaker info messages by email:   Not yet implemented
+    Future improvements:
+      Plant caretaker info messages by email/message/app:   Not yet implemented
       Operator redefinition:                    Not yet implemented 
 *****************************************************/
 
@@ -128,15 +129,15 @@ void loop() {
       //delay(WATERING_BURST);
       //waterpump.off();
     } catch (const char *msg) {
-      error_message += msg;
+      error_message = msg;
       cerr << msg << endl;
       Serial.println(msg);
     }
   } else {
     waterpump.off();
   }
-  //index which determines which data is displayed on the LCD screen
-  //loop_index++;
+
+  //Waterpump control without exception
   /*
   if (!waterlevelLow && !soilMoisture.soilMoistureHigh() && (buttonState || soilMoisture.soilMoistureLow())){
     waterpump.on();
@@ -147,9 +148,5 @@ void loop() {
   }
   delay(50);
   */
-
-  //TODO
-    //Display message on lcd screen with autoscroll
-    //if temperature too high, notify caretaker --> By msg / email?             => NOT YET
   
 }
