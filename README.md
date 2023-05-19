@@ -1,5 +1,6 @@
 # Planty - Automated Plant Irrigation and surveillance system
-C++ project using an esp8266 
+C++ project at INSA Toulouse using an esp8266 
+By Pauline Dupuy and Bastian Krohg
 
 ## Setup: 
 To be able to run our program you need to follow these steps: 
