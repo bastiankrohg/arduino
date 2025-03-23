@@ -1,4 +1,4 @@
-Grove - LCD RGB Backlight
+Grove - LCD RGB Backlight  [![Build Status](https://travis-ci.com/Seeed-Studio/Grove_LCD_RGB_Backlight.svg?branch=master)](https://travis-ci.com/Seeed-Studio/Grove_LCD_RGB_Backlight)
 ---------------------------------------------------------
 
 ![Grove - LCD RGB Backlight](https://raw.githubusercontent.com/SeeedDocument/Grove_LCD_RGB_Backlight/master/images/intro.jpg)
@@ -22,6 +22,14 @@ Before we use this lcd, we should initialize it. You can use this function:
     lcd.begin(16, 2);
 
 This means that this lcd has 16 columns and 2 rows.
+
+Optionally you can also specify the character size: LCD_5x10DOTS  or LCD_5x8DOTS which is the default
+
+and for those board who support different Wire objects, which one:  
+
+Example:
+    lcd.begin(16, 2, LCD_5x8DOTS, Wire2);
+
 
 
 ### Change Color of Backlight
